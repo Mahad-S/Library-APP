@@ -1,4 +1,4 @@
-package se.yrgo.libraryapp.AppModule;
+package se.yrgo.libraryapp;
 
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
