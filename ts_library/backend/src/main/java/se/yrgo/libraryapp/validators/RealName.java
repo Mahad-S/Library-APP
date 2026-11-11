@@ -12,7 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This validator checks that the real names match our high standard for proper names. I.e. no bad
+ * This validator checks that the real names match our high standard for proper
+ * names. I.e. no bad
  * words.
  */
 public final class RealName {
@@ -21,21 +22,21 @@ public final class RealName {
 
     static {
         try (InputStream is = RealName.class.getClassLoader().getResourceAsStream("bad_words.txt");
-                BufferedReader reader =
-                        new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-            
-               invalidWords.addAll(reader.lines()
-                                      .map(String::trim)
-                                      .map(String::toLowerCase)
-                                      .filter(s -> !s.isEmpty())
-                                      .collect(Collectors.toSet()));
-            
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+
+            invalidWords.addAll(reader.lines()
+                    .map(String::trim)
+                    .map(String::toLowerCase)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toSet()));
+
         } catch (IOException ex) {
             logger.error("Unable to initialize list of bad words", ex);
         }
     }
 
-    private RealName() {}
+    private RealName() {
+    }
 
     /**
      * Validates if the given name is a valid and proper name.
@@ -45,13 +46,34 @@ public final class RealName {
      * 
      */
     public static boolean validate(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+
+        // 1. Kolla så namnet bara innehåller tillåtna tecken
+        if (!name.matches("^[a-zA-ZåäöÅÄÖ\\s\\-']+$")) {
+            return false;
+        }
+
+        // 2. Rensa och dela upp i ord
         String cleanName = Utils.cleanAndUnLeet(name);
         String[] words = cleanName.split("\\W+");
+
         for (int i = 0; i < words.length; i++) {
-            if (invalidWords.contains(words[i].toLowerCase())) {
+            String word = words[i];
+
+            // Stoppa ord som är kortare än 2 tecken (stoppar "A A A" eller ensamma
+            // bokstäver)
+            if (word.length() < 2) {
+                return false;
+            }
+
+            // 3. Kolla mot förbjudna ord
+            if (invalidWords.contains(word.toLowerCase())) {
                 return false;
             }
         }
+
         return true;
     }
 }
