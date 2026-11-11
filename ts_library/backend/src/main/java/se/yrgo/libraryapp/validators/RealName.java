@@ -50,25 +50,20 @@ public final class RealName {
             return false;
         }
 
-        // 1. Kolla så namnet bara innehåller tillåtna tecken
         if (!name.matches("^[a-zA-ZåäöÅÄÖ\\s\\-']+$")) {
             return false;
         }
 
-        // 2. Rensa och dela upp i ord
         String cleanName = Utils.cleanAndUnLeet(name);
         String[] words = cleanName.split("\\W+");
 
         for (int i = 0; i < words.length; i++) {
             String word = words[i];
 
-            // Stoppa ord som är kortare än 2 tecken (stoppar "A A A" eller ensamma
-            // bokstäver)
             if (word.length() < 2) {
                 return false;
             }
-
-            // 3. Kolla mot förbjudna ord
+            
             if (invalidWords.contains(word.toLowerCase())) {
                 return false;
             }
