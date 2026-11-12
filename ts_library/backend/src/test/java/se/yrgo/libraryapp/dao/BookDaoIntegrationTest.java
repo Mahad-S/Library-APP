@@ -56,15 +56,13 @@ public class BookDaoIntegrationTest {
 
         assertThat(loans).isNotNull();
     }
-    
+
     @Test
     void returnBook() {
         BookDao bookDao = new BookDao(ds);
 
-        // Testar att köra delete-frågan för återlämning (returnerar boolean)
         boolean success = bookDao.returnBook(BookId.of(1));
 
-        // Metoden ska köra utan SQL-fel (antingen true eller false beroende på om boken var utlånad)
         assertThat(success).isIn(true, false);
     }
 }
