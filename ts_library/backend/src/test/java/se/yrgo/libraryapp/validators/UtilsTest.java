@@ -9,6 +9,8 @@ public class UtilsTest {
     void testOnlyLettersAndWhitespace() {
         assertThat(Utils.onlyLettersAndWhitespace("Test 123!@#")).isEqualTo("test ");
     }
+public class UtilsTest {
+
 
     @Test
     void testOnlyLettersAndWhitespaceWithNull() {

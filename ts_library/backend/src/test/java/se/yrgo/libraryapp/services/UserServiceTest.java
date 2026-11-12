@@ -1,0 +1,43 @@
+package se.yrgo.libraryapp.services;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import se.yrgo.libraryapp.dao.UserDao;
+import se.yrgo.libraryapp.entities.LoginInfo;
+import se.yrgo.libraryapp.entities.UserId;
+
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.STRICT_STUBS)
+public class UserServiceTest {
+    @Mock
+    private UserDao userDao;
+
+    @Mock
+    private PasswordEncoder encoder;
+
+    @Test
+    void correctLogin() {
+        final String userId = "1";
+        final UserId id = UserId.of(userId);
+        final String username = "testuser";
+        final String password = "password";
+        final String passwordHash = "$argon2i$v=19$m=16,t=2,p=1$QldXU09Sc2dzOWdUalBKQw$LgKb6x4usOpDLTlXCBVhxA";
+        final LoginInfo info = new LoginInfo(id, passwordHash);
+        when(userDao.getLoginInfo(username)).thenReturn(Optional.of(info));
+        when(encoder.matches(password, passwordHash)).thenReturn(true);
+        UserService userService = new UserService(userDao, encoder);
+        assertThat(userService.validate(username,
+                password)).isEqualTo(Optional.of(id));
+    }
+}

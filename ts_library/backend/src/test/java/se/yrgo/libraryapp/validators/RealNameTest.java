@@ -21,4 +21,3 @@ class RealNameTest {
     void testInvalidRealNames(String input) {
         assertThat(RealName.validate(input)).isFalse();
     }
-}
