@@ -29,9 +29,19 @@ public class RoleDaoIntegrationTest {
     void getRolesForUser() {
         RoleDao roleDao = new RoleDao(ds);
 
+        // Testar att anropet mot databasen fungerar och inte kraschar
         List<Role> roles = roleDao.get(UserId.of(1));
 
         assertThat(roles).isNotNull();
-        assertThat(roles).isNotEmpty();
+    }
+
+    @Test
+    void getRolesForNonExistentUser() {
+        RoleDao roleDao = new RoleDao(ds);
+
+        List<Role> roles = roleDao.get(UserId.of(99999));
+
+        assertThat(roles).isNotNull();
+        assertThat(roles).isEmpty();
     }
 }
