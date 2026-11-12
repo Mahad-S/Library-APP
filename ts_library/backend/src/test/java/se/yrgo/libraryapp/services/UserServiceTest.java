@@ -35,6 +35,7 @@ public class UserServiceTest {
         final String passwordHash = "$argon2i$v=19$m=16,t=2,p=1$QldXU09Sc2dzOWdUalBKQw$LgKb6x4usOpDLTlXCBVhxA";
         final LoginInfo info = new LoginInfo(id, passwordHash);
         when(userDao.getLoginInfo(username)).thenReturn(Optional.of(info));
+        when(encoder.matches(password, passwordHash)).thenReturn(true);
         UserService userService = new UserService(userDao, encoder);
         assertThat(userService.validate(username,
                 password)).isEqualTo(Optional.of(id));
