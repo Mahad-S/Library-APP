@@ -28,8 +28,7 @@ public class RoleDaoIntegrationTest {
     @Test
     void getRolesForUser() {
         RoleDao roleDao = new RoleDao(ds);
-
-        // Testar att anropet mot databasen fungerar och inte kraschar
+        
         List<Role> roles = roleDao.get(UserId.of(1));
 
         assertThat(roles).isNotNull();
