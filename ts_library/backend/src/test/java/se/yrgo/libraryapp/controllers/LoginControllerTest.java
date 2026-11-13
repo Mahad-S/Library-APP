@@ -96,7 +96,7 @@ class LoginControllerTest {
 
     @Test
     void testIsLoggedInWithNullOrInvalidSession() {
-        // Arrange
+        
         String invalidSessionCookie = null;
 
         List<Role> result = loginController.isLoggedIn(invalidSessionCookie);

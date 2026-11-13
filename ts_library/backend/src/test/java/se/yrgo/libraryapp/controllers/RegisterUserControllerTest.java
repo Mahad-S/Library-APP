@@ -40,7 +40,7 @@ class RegisterUserControllerTest {
 
     @Test
     void testRegisterValidationFailure() {
-        
+
         when(registerUserData.getName()).thenReturn("");
         when(registerUserData.getRealName()).thenReturn("Valid Name");
 
