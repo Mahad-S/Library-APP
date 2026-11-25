@@ -30,8 +30,6 @@ public class LoginLogoutIntegrationTest {
     @Container
     private static final MySQLContainer<?> MYSQL_CONTAINER = new MySQLContainer<>("mysql:8.0.29");
 
-    
-
     @Test
     public void alwaysOkToLogout(int serverPort) throws IOException {
         HttpRequest request = createRequest(serverPort, "/logout")
@@ -68,6 +66,19 @@ public class LoginLogoutIntegrationTest {
         HttpResponse<String> logoutResponse = sendRequest(logoutRequest);
 
         assertEquals(HttpURLConnection.HTTP_OK, logoutResponse.statusCode());
+    }
+
+    @Test
+    void testLoginWithInvalidUser(int serverPort) {
+        HttpRequest loginRequest = createRequest(serverPort, "/login")
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        "{\"username\":\"wronguser\",\"password\":\"wrongpassword\"}"))
+                .build();
+
+        HttpResponse<String> response = sendRequest(loginRequest);
+
+        assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, response.statusCode());
     }
 
     private static HttpRequest.Builder createRequest(int serverPort, String path) {
